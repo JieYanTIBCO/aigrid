@@ -5,27 +5,27 @@ import path from 'path'
 export default defineConfig({
   plugins: [react()],
   build: {
-    outDir: 'dist',
     lib: {
+      entry: path.resolve(process.cwd(), 'src/extension/popup/main.tsx'),
+      name: 'aigrid',
       formats: ['es'],
-      entry: {
-        popup: path.resolve(__dirname, '../../src/extension/popup/main.tsx'),
-        background: path.resolve(__dirname, '../../src/extension/background/main.ts'),
-        content: path.resolve(__dirname, '../../src/extension/content/main.ts')
-      }
+      fileName: (format) => `popup.js`
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      input: {
+        popup: path.resolve(process.cwd(), 'src/extension/popup/main.tsx'),
+        background: path.resolve(process.cwd(), 'src/extension/background/main.ts'),
+        content: path.resolve(process.cwd(), 'src/extension/content/main.ts')
+      },
       output: {
+        dir: 'dist',
         entryFileNames: '[name].js',
-        chunkFileNames: '[name].[hash].js',
-        assetFileNames: '[name].[hash][extname]',
         format: 'es',
-        globals: {
-          react: 'React',
-          'react-dom': 'ReactDOM'
-        }
+        preserveModules: false
       }
-    }
+    },
+    cssCodeSplit: false,
+    outDir: 'dist',
+    emptyOutDir: true
   }
 })
