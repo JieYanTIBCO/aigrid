@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist/newtab"
+  },
+  "include": ["src/extension/newtab/**/*.ts", "src/extension/newtab/**/*.tsx"]
+}

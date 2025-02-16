@@ -8,8 +8,8 @@ const __dirname = dirname(__filename)
 const projectRoot = path.resolve(__dirname, '..')
 
 const paths = [
-  'src/extension/popup/main.tsx',
-  'src/extension/popup/index.html',
+  'src/extension/newtab/index.tsx',
+  'src/extension/newtab/index.html',
   'src/extension/background/main.ts',
   'src/extension/content/main.ts'
 ]

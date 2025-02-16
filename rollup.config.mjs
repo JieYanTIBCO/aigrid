@@ -3,15 +3,9 @@ import typescript from '@rollup/plugin-typescript'
 import resolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
+import html from '@rollup/plugin-html'
+import copy from 'rollup-plugin-copy'
 import path from 'path'
-
-// Shared TypeScript configuration
-const tsPluginOptions = {
-  tsconfig: './tsconfig.json',
-  sourceMap: true,
-  include: ['src/**/*.ts', 'src/**/*.tsx'],
-  exclude: ['node_modules']
-}
 
 // Shared plugin configuration
 const sharedPlugins = [
@@ -27,19 +21,43 @@ const sharedPlugins = [
 ]
 
 export default defineConfig([
-  // Popup bundle
+  // Newtab bundle
   {
-    input: 'src/extension/popup/main.tsx',
+    input: 'src/extension/newtab/index.tsx',
     output: {
-      file: 'dist/popup.js',
+      dir: 'dist/newtab',
       format: 'es',
       sourcemap: true
     },
     plugins: [
       ...sharedPlugins,
       typescript({
-        ...tsPluginOptions,
+        tsconfig: './tsconfig.newtab.json',
+        sourceMap: true,
         jsx: 'react'
+      }),
+      html({
+        template: ({ files }) => {
+          return `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>New Tab</title>
+  ${files.css?.map(file => `<link rel="stylesheet" href="${file.fileName}">`).join('\n')}
+</head>
+<body>
+  <div id="root"></div>
+  ${files.js?.map(file => `<script type="module" src="${file.fileName}"></script>`).join('\n')}
+</body>
+</html>
+          `.trim();
+        }
+      }),
+      copy({
+        targets: [
+          { src: 'public/**/*', dest: 'dist/' }
+        ]
       })
     ],
     external: ['react', 'react-dom']
@@ -48,26 +66,34 @@ export default defineConfig([
   {
     input: 'src/extension/background/main.ts',
     output: {
-      file: 'dist/background.js',
+      dir: 'dist',
+      entryFileNames: 'background.js',
       format: 'es',
       sourcemap: true
     },
     plugins: [
       ...sharedPlugins,
-      typescript(tsPluginOptions)
+      typescript({
+        tsconfig: './tsconfig.background.json',
+        sourceMap: true
+      })
     ]
   },
   // Content script bundle
   {
     input: 'src/extension/content/main.ts',
     output: {
-      file: 'dist/content.js',
+      dir: 'dist',
+      entryFileNames: 'content.js',
       format: 'es',
       sourcemap: true
     },
     plugins: [
       ...sharedPlugins,
-      typescript(tsPluginOptions)
+      typescript({
+        tsconfig: './tsconfig.content.json',
+        sourceMap: true
+      })
     ]
   }
 ])

@@ -15,6 +15,11 @@ async function buildManifest() {
     const distDir = path.resolve(__dirname, '../dist');
     await fs.ensureDir(distDir);
     
+    // Copy icons directory
+    const iconsDir = path.resolve(__dirname, '../public/icons');
+    const distIconsDir = path.resolve(distDir, 'icons');
+    await fs.copy(iconsDir, distIconsDir);
+    
     // Write manifest to dist
     const manifestPath = path.resolve(distDir, 'manifest.json');
     await fs.writeFile(manifestPath, manifestContent);
