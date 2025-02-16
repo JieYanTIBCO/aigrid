@@ -1,3 +1,5 @@
+import * as React from 'react';
+import * as ReactDOM from 'react-dom/client';
 import GridLayout from './GridLayout';
 import './index.css';
 
@@ -8,14 +10,11 @@ const init = () => {
       throw new Error('Root element not found');
     }
 
-    // Access React and ReactDOM from window since they're loaded via script tags
-    const root = (window as any).ReactDOM.createRoot(container);
+    const root = ReactDOM.createRoot(container);
     root.render(
-      (window as any).React.createElement(
-        (window as any).React.StrictMode,
-        null,
-        (window as any).React.createElement(GridLayout)
-      )
+      <React.StrictMode>
+        <GridLayout />
+      </React.StrictMode>
     );
   } catch (error) {
     console.error('Failed to initialize newtab:', error);
