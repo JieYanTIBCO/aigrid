@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "AIGrid",
+  "description": "Your AI Collaboration Hub for the Intelligent Era",
+  "version": "0.1.0",
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "src/extension/background/index.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*"],
+      "js": ["src/extension/content/chatgpt/index.ts"]
+    }
+  ],
+  "permissions": [
+    "storage",
+    "cookies",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*"
+  ]
+}
