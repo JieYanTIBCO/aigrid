@@ -26,9 +26,15 @@ export default defineConfig([
     input: 'src/extension/newtab/index.tsx',
     output: {
       dir: 'dist/newtab',
-      format: 'es',
-      sourcemap: true
+      format: 'iife',
+      sourcemap: true,
+      globals: {
+        'react': 'React',
+        'react-dom': 'ReactDOM'
+      },
+      name: 'AIGrid'
     },
+    external: ['react', 'react-dom'],
     plugins: [
       ...sharedPlugins,
       typescript({
@@ -49,9 +55,9 @@ export default defineConfig([
 </head>
 <body>
   <div id="root"></div>
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  ${files.js?.map(file => `<script type="module" src="${file.fileName}"></script>`).join('\n')}
+  <script src="react.production.min.js"></script>
+  <script src="react-dom.production.min.js"></script>
+  ${files.js?.map(file => `<script src="${file.fileName}"></script>`).join('\n')}
 </body>
 </html>
           `.trim();
@@ -59,7 +65,15 @@ export default defineConfig([
       }),
       copy({
         targets: [
-          { src: 'public/**/*', dest: 'dist/' }
+          { src: 'public/**/*', dest: 'dist/' },
+          { 
+            src: 'node_modules/react/umd/react.production.min.js',
+            dest: 'dist/newtab'
+          },
+          {
+            src: 'node_modules/react-dom/umd/react-dom.production.min.js',
+            dest: 'dist/newtab'
+          }
         ]
       })
     ]
