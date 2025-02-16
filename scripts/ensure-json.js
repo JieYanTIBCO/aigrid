@@ -11,52 +11,53 @@ async function ensureJson() {
         const distDir = path.join(projectRoot, 'dist');
         const manifestPath = path.join(distDir, 'manifest.json');
         
-        // Format manifest with Windows line endings
-        const manifestObj = {
-            manifest_version: 3,
-            name: "AIGrid",
-            description: "Your AI Collaboration Hub for the Intelligent Era",
-            version: "0.1.0",
-            chrome_url_overrides: {
-                newtab: "newtab/index.html"
+        // Create manifest object
+        const manifest = {
+            "manifest_version": 3,
+            "name": "AIGrid",
+            "description": "Your AI Collaboration Hub for the Intelligent Era",
+            "version": "0.1.0",
+            "chrome_url_overrides": {
+                "newtab": "newtab/index.html"
             },
-            background: {
-                service_worker: "background.js",
-                type: "module"
+            "background": {
+                "service_worker": "background.js",
+                "type": "module"
             },
-            content_scripts: [
+            "content_scripts": [
                 {
-                    matches: ["https://chat.openai.com/*"],
-                    js: ["content.js"]
+                    "matches": ["https://chat.openai.com/*"],
+                    "js": ["content.js"]
                 }
             ],
-            permissions: [
+            "permissions": [
                 "storage",
                 "cookies",
                 "scripting",
                 "tabs"
             ],
-            host_permissions: [
+            "host_permissions": [
                 "https://chat.openai.com/*"
             ],
-            action: {
-                default_icon: {
+            "action": {
+                "default_icon": {
                     "16": "icons/icon16.png",
                     "48": "icons/icon48.png",
                     "128": "icons/icon128.png"
                 }
             },
-            icons: {
+            "icons": {
                 "16": "icons/icon16.png",
                 "48": "icons/icon48.png",
                 "128": "icons/icon128.png"
             }
         };
 
-        // Convert to properly formatted JSON string
-        const jsonStr = JSON.stringify(manifestObj, null, 2) + '\n';
+        // Convert to properly formatted JSON string with indentation
+        const manifestJson = JSON.stringify(manifest, null, 2);
         
-        await fs.writeFile(manifestPath, jsonStr, 'utf8');
+        // Write to file
+        await fs.writeFile(manifestPath, manifestJson, 'utf8');
         
         // Verify the output
         const content = await fs.readFile(manifestPath, 'utf8');

@@ -1,25 +1,16 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom/client';
-import GridLayout from './GridLayout';
+import React from 'react';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 
-const init = () => {
-  try {
-    const container = document.getElementById('root');
-    if (!container) {
-      throw new Error('Root element not found');
-    }
-
-    const root = ReactDOM.createRoot(container);
-    root.render(
-      <React.StrictMode>
-        <GridLayout />
-      </React.StrictMode>
+const App = () => {
+    return (
+        <div>
+            <h1>AIGrid - Live Reload</h1>
+            <p>Development build with live reload enabled</p>
+            <p>Try making changes to see instant updates!</p>
+        </div>
     );
-  } catch (error) {
-    console.error('Failed to initialize newtab:', error);
-  }
 };
 
-// Initialize after scripts are loaded
-document.addEventListener('DOMContentLoaded', init);
+const root = createRoot(document.getElementById('root')!);
+root.render(<App />);

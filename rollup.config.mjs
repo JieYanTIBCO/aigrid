@@ -46,13 +46,14 @@ export default defineConfig([
       }),
       html({
         template: ({ files }) => {
+          const isDev = process.env.NODE_ENV === 'development';
           return `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Tab</title>
+  <title>New Tab${isDev ? ' (Dev)' : ''}</title>
   ${files.css?.map(file => `<link rel="stylesheet" href="${file.fileName}">`).join('\n')}
 </head>
 <body>
@@ -60,6 +61,7 @@ export default defineConfig([
   <script src="react.production.min.js"></script>
   <script src="react-dom.production.min.js"></script>
   ${files.js?.map(file => `<script src="${file.fileName}"></script>`).join('\n')}
+  ${isDev ? '<script src="live-reload.js"></script>' : ''}
 </body>
 </html>
           `.trim();
@@ -76,10 +78,10 @@ export default defineConfig([
             src: 'node_modules/react-dom/umd/react-dom.production.min.js',
             dest: 'dist/newtab'
           },
-          {
-            src: 'src/extension/newtab/index.html',
+          ...(process.env.NODE_ENV === 'development' ? [{
+            src: 'src/extension/newtab/live-reload.js',
             dest: 'dist/newtab'
-          }
+          }] : [])
         ]
       })
     ]
