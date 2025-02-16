@@ -1,31 +1,18 @@
 import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
+import multiEntry from './plugin-multi-entry'
 
-export default defineConfig({
-  plugins: [react()],
-  build: {
-    lib: {
-      entry: path.resolve(process.cwd(), 'src/extension/popup/main.tsx'),
-      name: 'aigrid',
-      formats: ['es'],
-      fileName: (format) => `popup.js`
-    },
-    rollupOptions: {
-      input: {
-        popup: path.resolve(process.cwd(), 'src/extension/popup/main.tsx'),
-        background: path.resolve(process.cwd(), 'src/extension/background/main.ts'),
-        content: path.resolve(process.cwd(), 'src/extension/content/main.ts')
-      },
-      output: {
-        dir: 'dist',
-        entryFileNames: '[name].js',
-        format: 'es',
-        preserveModules: false
+export default defineConfig(() => {
+  return {
+    build: {
+      rollupOptions: {
+        input: ['src/extension/popup/main.tsx'],
+        output: {
+          entryFileNames: `popup.js`,
+          chunkFileNames: `[name].js`,
+          assetFileNames: `[name].[ext]`
+        }
       }
     },
-    cssCodeSplit: false,
-    outDir: 'dist',
-    emptyOutDir: true
+    plugins: [multiEntry()]
   }
 })

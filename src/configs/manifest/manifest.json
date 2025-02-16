@@ -7,13 +7,13 @@
     "default_popup": "popup.html"
   },
   "background": {
-    "service_worker": "src/extension/background/index.ts",
+    "service_worker": "background.js",
     "type": "module"
   },
   "content_scripts": [
     {
       "matches": ["https://chat.openai.com/*"],
-      "js": ["src/extension/content/chatgpt/index.ts"]
+      "js": ["content.js"]
     }
   ],
   "permissions": [
