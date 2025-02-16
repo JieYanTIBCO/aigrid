@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "node ./scripts/validate-entrypoints.js",
-    "build": "npm run clean && rollup --config rollup.config.mjs && node ./scripts/convert-icons.js && node ./scripts/build-manifest.js",
+    "build": "node scripts/build-complete.js",
     "dev": "rollup --config rollup.config.mjs -w",
     "preview": "vite preview"
   },

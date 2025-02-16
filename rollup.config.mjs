@@ -32,7 +32,9 @@ export default defineConfig([
         'react': 'React',
         'react-dom': 'ReactDOM'
       },
-      name: 'AIGrid'
+      name: 'AIGrid',
+      entryFileNames: 'index.js',
+      assetFileNames: '[name][extname]'
     },
     external: ['react', 'react-dom'],
     plugins: [
@@ -72,6 +74,10 @@ export default defineConfig([
           },
           {
             src: 'node_modules/react-dom/umd/react-dom.production.min.js',
+            dest: 'dist/newtab'
+          },
+          {
+            src: 'src/extension/newtab/index.html',
             dest: 'dist/newtab'
           }
         ]
