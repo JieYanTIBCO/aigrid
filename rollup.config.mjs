@@ -43,11 +43,14 @@ export default defineConfig([
 <html>
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Tab</title>
   ${files.css?.map(file => `<link rel="stylesheet" href="${file.fileName}">`).join('\n')}
 </head>
 <body>
   <div id="root"></div>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   ${files.js?.map(file => `<script type="module" src="${file.fileName}"></script>`).join('\n')}
 </body>
 </html>
@@ -59,8 +62,7 @@ export default defineConfig([
           { src: 'public/**/*', dest: 'dist/' }
         ]
       })
-    ],
-    external: ['react', 'react-dom']
+    ]
   },
   // Background script bundle
   {
