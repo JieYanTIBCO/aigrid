@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "node ./scripts/validate-entrypoints.js",
-    "build": "npm run clean && rollup --config rollup.config.mjs",
+    "build": "npm run clean && rollup --config rollup.config.mjs && node ./scripts/build-manifest.js",
     "dev": "rollup --config rollup.config.mjs -w",
     "preview": "vite preview"
   },
@@ -15,10 +15,12 @@
     "@rollup/plugin-node-resolve": "^15.0.0",
     "@rollup/plugin-typescript": "^11.0.0",
     "@types/chrome": "^0.0.257",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20.11.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "@vitejs/plugin-react": "^4.0.0",
+    "fs-extra": "^11.3.0",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
