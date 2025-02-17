@@ -91,25 +91,33 @@
   right: 0;
   background: #fff;
   border-top: 1px solid #e5e7eb;
-  padding: 16px;
+  padding: 8px 16px;
   transition: all 0.3s ease;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
   z-index: 1000;
+}
+
+.input-form {
   display: flex;
-  flex-direction: column;
+  align-items: flex-start;
   gap: 12px;
+  min-height: var(--line-height, 36px);
 }
 
-.unified-input-header {
+.input-left {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 12px;
+  white-space: nowrap;
+  padding-top: 4px;
 }
 
-.input-controls {
+.input-right {
   display: flex;
-  align-items: center;
-  gap: 16px;
+  flex: 1;
+  gap: 12px;
+  align-items: flex-start;
+  min-height: var(--line-height, 36px);
 }
 
 .active-model {
@@ -123,30 +131,25 @@
 .active-model::before {
   content: '';
   display: inline-block;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   background: #10b981;
   border-radius: 50%;
 }
 
-.input-form {
-  display: flex;
-  gap: 12px;
-  align-items: flex-end;
-}
-
 .input-textarea {
   flex: 1;
-  padding: 12px;
+  height: var(--line-height, 36px);
+  padding: 8px 12px;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-radius: 6px;
   resize: none;
   font-family: inherit;
   font-size: 14px;
-  line-height: 1.5;
-  min-height: var(--input-height, 50px);
-  max-height: 150px;
+  line-height: 20px;
+  overflow-y: auto;
   transition: height 0.2s ease;
+  margin: 0;
 }
 
 .input-textarea:focus {
@@ -156,8 +159,8 @@
 }
 
 .submit-button {
-  padding: 8px 16px;
-  height: 40px;
+  padding: 6px 16px;
+  height: 36px;
   background: #2563eb;
   color: white;
   border: none;
@@ -166,6 +169,7 @@
   cursor: pointer;
   transition: background-color 0.2s;
   white-space: nowrap;
+  line-height: 24px;
 }
 
 .submit-button:hover:not(:disabled) {
@@ -180,21 +184,23 @@
 /* LayoutControl styles */
 .layout-control {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   align-items: center;
 }
 
 .layout-icon-btn {
-  padding: 8px;
+  padding: 4px;
   background: transparent;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   color: #6b7280;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 24px;
+  width: 24px;
 }
 
 .layout-icon-btn:hover {
@@ -209,8 +215,8 @@
 }
 
 .layout-icon-btn svg {
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
 }
 
 /* Responsive adjustments */
@@ -225,5 +231,17 @@
   
   .unified-input {
     left: 40px;
+  }
+  
+  .input-left {
+    gap: 8px;
+  }
+  
+  .active-model {
+    font-size: 12px;
+  }
+  
+  .submit-button {
+    padding: 6px 12px;
   }
 }

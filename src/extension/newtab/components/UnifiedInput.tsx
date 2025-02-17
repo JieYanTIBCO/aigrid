@@ -11,8 +11,7 @@ interface UnifiedInputProps {
 }
 
 const MAX_LINES = 5;
-const MIN_HEIGHT = 50;
-const MAX_HEIGHT = 150;
+const LINE_HEIGHT = 36;
 
 const UnifiedInput: React.FC<UnifiedInputProps> = ({ 
   onSubmit, 
@@ -22,37 +21,44 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
   onLayoutChange
 }) => {
   const [inputValue, setInputValue] = useState('');
-  const [height, setHeight] = useState(MIN_HEIGHT);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const updateHeight = () => {
     if (!textareaRef.current) return;
-
-    // Reset height to auto to get proper scrollHeight
-    textareaRef.current.style.height = 'auto';
+    const textarea = textareaRef.current;
     
-    // Calculate new height
-    const lines = textareaRef.current.value.split('\n');
-    const newHeight = Math.min(
-      Math.max(
-        MIN_HEIGHT,
-        Math.min(
-          textareaRef.current.scrollHeight,
-          MAX_HEIGHT
-        )
-      ),
-      lines.length > MAX_LINES ? MAX_HEIGHT : MAX_HEIGHT
-    );
-
-    setHeight(newHeight);
-    textareaRef.current.style.height = `${newHeight}px`;
-
-    // Update CSS variable for layout adjustments
-    document.documentElement.style.setProperty(
-      '--unified-input-height',
-      `${newHeight + 32}px` // Add padding
-    );
+    // Reset height to single line
+    textarea.style.height = `${LINE_HEIGHT}px`;
+    
+    // Only expand if content exceeds one line
+    if (textarea.scrollHeight > LINE_HEIGHT) {
+      const newHeight = Math.min(
+        textarea.scrollHeight,
+        LINE_HEIGHT * MAX_LINES
+      );
+      textarea.style.height = `${newHeight}px`;
+      document.documentElement.style.setProperty(
+        '--unified-input-height',
+        `${newHeight + 16}px`
+      );
+    } else {
+      document.documentElement.style.setProperty(
+        '--unified-input-height',
+        `${LINE_HEIGHT + 16}px`
+      );
+    }
   };
+
+  useEffect(() => {
+    // Set initial height and CSS variable
+    if (textareaRef.current) {
+      textareaRef.current.style.height = `${LINE_HEIGHT}px`;
+      document.documentElement.style.setProperty(
+        '--line-height',
+        `${LINE_HEIGHT}px`
+      );
+    }
+  }, []);
 
   useEffect(() => {
     updateHeight();
@@ -64,12 +70,14 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
 
     onSubmit(inputValue.trim(), currentTarget);
     setInputValue('');
-    setHeight(MIN_HEIGHT);
     
     if (textareaRef.current) {
-      textareaRef.current.style.height = `${MIN_HEIGHT}px`;
+      textareaRef.current.style.height = `${LINE_HEIGHT}px`;
     }
-    document.documentElement.style.setProperty('--unified-input-height', `${MIN_HEIGHT + 32}px`);
+    document.documentElement.style.setProperty(
+      '--unified-input-height',
+      `${LINE_HEIGHT + 16}px`
+    );
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -84,7 +92,6 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
     const lines = newValue.split('\n');
     
     if (lines.length > MAX_LINES) {
-      // Keep only the last MAX_LINES lines
       setInputValue(lines.slice(-MAX_LINES).join('\n'));
     } else {
       setInputValue(newValue);
@@ -94,10 +101,9 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
   return (
     <div 
       className="unified-input"
-      style={{ '--input-height': `${height}px` } as React.CSSProperties}
     >
-      <div className="unified-input-header">
-        <div className="input-controls">
+      <form onSubmit={handleSubmit} className="input-form">
+        <div className="input-left">
           <LayoutControl 
             currentLayout={currentLayout}
             onLayoutChange={onLayoutChange}
@@ -106,28 +112,26 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
             To: {currentTarget}
           </div>
         </div>
-      </div>
-      <form onSubmit={handleSubmit} className="input-form">
-        <textarea
-          ref={textareaRef}
-          value={inputValue}
-          onChange={handleInput}
-          onKeyDown={handleKeyDown}
-          placeholder="Type your message..."
-          disabled={isLoading}
-          className="input-textarea"
-          style={{ height: `${height}px` }}
-        />
-        <button
-          type="submit"
-          disabled={isLoading || !inputValue.trim()}
-          className="submit-button"
-        >
-          {isLoading ? '...' : 'Send'}
-        </button>
+        <div className="input-right">
+          <textarea
+            ref={textareaRef}
+            value={inputValue}
+            onChange={handleInput}
+            onKeyDown={handleKeyDown}
+            placeholder="Type your message..."
+            disabled={isLoading}
+            className="input-textarea"
+          />
+          <button
+            type="submit"
+            disabled={isLoading || !inputValue.trim()}
+            className="submit-button"
+          >
+            {isLoading ? '...' : 'Send'}
+          </button>
+        </div>
       </form>
     </div>
   );
 };
 
-export default UnifiedInput;
