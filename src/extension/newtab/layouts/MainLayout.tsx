@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import SidePanel from '../components/SidePanel';
 import UnifiedInput from '../components/UnifiedInput';
-import LayoutControl from '../components/LayoutControl';
-import GridWindow from '../GridWindow';
 import { LayoutType } from '../LayoutSelector';
+import GridWindow from '../GridWindow';
 import './MainLayout.css';
 
 interface ModelConfig {
@@ -175,14 +174,12 @@ const MainLayout: React.FC = () => {
         ))}
       </div>
 
-      <LayoutControl
-        currentLayout={currentLayout}
-        onLayoutChange={setCurrentLayout}
-      />
-
       <UnifiedInput
         currentTarget={activeModel}
         onSubmit={handleSubmit}
+        isLoading={false}
+        currentLayout={currentLayout}
+        onLayoutChange={setCurrentLayout}
       />
     </div>
   );

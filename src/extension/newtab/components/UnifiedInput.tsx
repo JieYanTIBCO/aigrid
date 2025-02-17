@@ -1,9 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
+import LayoutControl from './LayoutControl';
+import { LayoutType } from '../LayoutSelector';
 
 interface UnifiedInputProps {
   onSubmit: (text: string, target: string) => void;
   currentTarget: string;
   isLoading?: boolean;
+  currentLayout: LayoutType;
+  onLayoutChange: (layout: LayoutType) => void;
 }
 
 const MAX_LINES = 5;
@@ -13,7 +17,9 @@ const MAX_HEIGHT = 150;
 const UnifiedInput: React.FC<UnifiedInputProps> = ({ 
   onSubmit, 
   currentTarget,
-  isLoading = false 
+  isLoading = false,
+  currentLayout,
+  onLayoutChange
 }) => {
   const [inputValue, setInputValue] = useState('');
   const [height, setHeight] = useState(MIN_HEIGHT);
@@ -90,9 +96,15 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
       className="unified-input"
       style={{ '--input-height': `${height}px` } as React.CSSProperties}
     >
-      <div className="model-selector">
-        <div className="active-model">
-          To: {currentTarget}
+      <div className="unified-input-header">
+        <div className="input-controls">
+          <LayoutControl 
+            currentLayout={currentLayout}
+            onLayoutChange={onLayoutChange}
+          />
+          <div className="active-model">
+            To: {currentTarget}
+          </div>
         </div>
       </div>
       <form onSubmit={handleSubmit} className="input-form">
