@@ -1,8 +1,7 @@
-import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
-const App: React.FC = () => {
+const App = () => {
     return (
         <div>
             <h1>AIGrid - Live Reload</h1>
@@ -13,7 +12,6 @@ const App: React.FC = () => {
 };
 
 console.log('Mounting React app...');
-console.log('React version:', React.version);
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -26,6 +24,3 @@ const root = createRoot(rootElement);
 console.log('Created React root');
 root.render(<App />);
 console.log('Rendered React app');
-
-// For debug
-console.log('React version:', React.version);

@@ -240,41 +240,44 @@ export default async function build() {
     }
 
     console.log('All required directories exist.');
-    
+
     try {
-      console.log('Copying React dependencies...');
-      await fs.copy(
-        `node_modules/react/umd/react.${reactMode}.js`,
-        'dist/newtab/react.js'
-      );
+      console.log('Verifying output directories...');
+      const requiredFiles = [
+        'dist/newtab/index.html',
+        'dist/newtab/index.js'
+      ];
       
-      await fs.copy(
-        `node_modules/react-dom/umd/react-dom.${reactMode}.js`,
-        'dist/newtab/react-dom.js'
-      );
+      for (const file of requiredFiles) {
+        if (!fs.existsSync(file)) {
+          console.error(`Missing required file: ${file}`);
+          throw new Error(`Build validation failed: ${file} not found`);
+        }
+        console.log(`Verified: ${file}`);
+      }
     } catch (error) {
-      console.error('Error copying React dependencies:', error);
+      console.error('Build process failed:', error);
       throw error;
     }
-  } catch (error) {
-    console.error('Build failed:', error);
-    throw error;
-  }
 
-  console.log('Copying additional files...');
+    console.log('Copying additional files...');
 
-  console.log('Starting manifest generation...');
-  try {
-    console.log('- Verifying manifest generator...');
-    if (typeof generateManifest !== 'function') {
-      throw new Error('generateManifest is not a function');
+    console.log('Starting manifest generation...');
+    try {
+      console.log('- Verifying manifest generator...');
+      if (typeof generateManifest !== 'function') {
+        throw new Error('generateManifest is not a function');
+      }
+      
+      console.log('- Generating manifest...');
+      await generateManifest();
+      console.log('- Manifest generated successfully');
+    } catch (manifestError) {
+      console.error('Manifest generation failed:', manifestError);
+      throw manifestError;
     }
-    
-    console.log('- Generating manifest...');
-    await generateManifest();
-    console.log('- Manifest generated successfully');
-  } catch (manifestError) {
-    console.error('Manifest generation failed:', manifestError);
-    throw manifestError;
+  } catch (globalError) {
+    console.error('Global build process failed:', globalError);
+    process.exit(1);
   }
 }

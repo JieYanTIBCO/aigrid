@@ -19,6 +19,7 @@ const cleanupDuplicateFiles = () => {
 };
 
 // Execute the main build script
+// Execute the main build script
 import('./build.js').then((buildModule) => {
   return buildModule.default();
 }).then(() => {

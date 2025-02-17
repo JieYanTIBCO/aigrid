@@ -5,6 +5,7 @@ import commonjs from '@rollup/plugin-commonjs'
 import postcss from 'rollup-plugin-postcss'
 import html from '@rollup/plugin-html'
 import copy from 'rollup-plugin-copy'
+import replace from '@rollup/plugin-replace'
 import path from 'path'
 
 // Shared plugin configuration
@@ -38,8 +39,13 @@ export default defineConfig([
       assetFileNames: '[name][extname]',
       inlineDynamicImports: true
     },
-    external: ['react', 'react-dom', 'react-dom/client'],
     plugins: [
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+        }
+      }),
       ...sharedPlugins,
       typescript({
         tsconfig: './tsconfig.newtab.json',
@@ -59,8 +65,6 @@ export default defineConfig([
 </head>
 <body>
   <div id="root"></div>
-  <script src="react.js"></script>
-  <script src="react-dom.js"></script>
   <script src="index.js"></script>
 </body>
 </html>
@@ -69,13 +73,10 @@ export default defineConfig([
       copy({
         targets: [
           { src: 'public/**/*', dest: 'dist/' },
-      ...(process.env.NODE_ENV === 'development' && !process.env.VITE_BUILD_WATCH ? [{
-        src: 'src/extension/newtab/live-reload.js',
-        dest: 'dist/newtab'
-      }] : []),
-      // Copy React dependencies
-      { src: 'node_modules/react/umd/react.production.min.js', dest: 'dist/newtab', rename: 'react.js' },
-      { src: 'node_modules/react-dom/umd/react-dom.production.min.js', dest: 'dist/newtab', rename: 'react-dom.js' }
+          ...(process.env.NODE_ENV === 'development' && !process.env.VITE_BUILD_WATCH ? [{
+            src: 'src/extension/newtab/live-reload.js',
+            dest: 'dist/newtab'
+          }] : [])
         ]
       })
     ]
@@ -90,6 +91,12 @@ export default defineConfig([
       sourcemap: true
     },
     plugins: [
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+        }
+      }),
       ...sharedPlugins,
       typescript({
         tsconfig: './tsconfig.background.json',
@@ -107,6 +114,12 @@ export default defineConfig([
       sourcemap: true
     },
     plugins: [
+      replace({
+        preventAssignment: true,
+        values: {
+          'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+        }
+      }),
       ...sharedPlugins,
       typescript({
         tsconfig: './tsconfig.content.json',

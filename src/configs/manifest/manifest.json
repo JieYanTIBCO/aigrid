@@ -4,7 +4,7 @@
   "description": "Your AI Collaboration Hub for the Intelligent Era",
   "version": "0.1.0",
   "chrome_url_overrides": {
-    "newtab": "newtab/index.html"
+    "newtab": "/newtab/index.html"
   },
   "action": {
     "default_icon": {
