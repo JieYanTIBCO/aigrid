@@ -30,19 +30,22 @@ export default defineConfig([
       sourcemap: true,
       globals: {
         'react': 'React',
+        'react-dom/client': 'ReactDOM',
         'react-dom': 'ReactDOM'
       },
       name: 'AIGrid',
       entryFileNames: 'index.js',
-      assetFileNames: '[name][extname]'
+      assetFileNames: '[name][extname]',
+      inlineDynamicImports: true
     },
-    external: ['react', 'react-dom'],
+    external: ['react', 'react-dom', 'react-dom/client'],
     plugins: [
       ...sharedPlugins,
       typescript({
         tsconfig: './tsconfig.newtab.json',
         sourceMap: true,
-        jsx: 'react'
+        jsx: 'react-jsx',
+        jsxImportSource: 'react'
       }),
       html({
         template: ({ files }) => {
@@ -54,13 +57,13 @@ export default defineConfig([
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Tab${isDev ? ' (Dev)' : ''}</title>
-  ${files.css?.map(file => `<link rel="stylesheet" href="${file.fileName}">`).join('\n')}
+  <link rel="stylesheet" href="index.css">
 </head>
 <body>
   <div id="root"></div>
-  <script src="react.production.min.js"></script>
-  <script src="react-dom.production.min.js"></script>
-  ${files.js?.map(file => `<script src="${file.fileName}"></script>`).join('\n')}
+  <script src="react.js"></script>
+  <script src="react-dom.js"></script>
+  <script src="index.js"></script>
   ${isDev ? '<script src="live-reload.js"></script>' : ''}
 </body>
 </html>
@@ -70,14 +73,6 @@ export default defineConfig([
       copy({
         targets: [
           { src: 'public/**/*', dest: 'dist/' },
-          { 
-            src: 'node_modules/react/umd/react.production.min.js',
-            dest: 'dist/newtab'
-          },
-          {
-            src: 'node_modules/react-dom/umd/react-dom.production.min.js',
-            dest: 'dist/newtab'
-          },
           ...(process.env.NODE_ENV === 'development' ? [{
             src: 'src/extension/newtab/live-reload.js',
             dest: 'dist/newtab'

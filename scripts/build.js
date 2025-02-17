@@ -1,38 +1,50 @@
-import fs from 'fs-extra';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { rollup } from 'rollup';
+import { loadConfigFile } from 'rollup/loadConfigFile';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { generateManifest } from './write-manifest.js';
+import fs from 'fs-extra';
 
-const execAsync = promisify(exec);
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-async function build() {
+export default async function build() {
+  console.log('Cleaning directories...');
+  await fs.remove('dist');
+
+  console.log('Building TypeScript files...');
   try {
-    // Clean and ensure dist directory
-    const distDir = path.resolve(__dirname, '../dist');
-    await fs.remove(distDir);
-    await fs.ensureDir(distDir);
-    console.log('✅ Directory cleaned and created');
+    const { options, warnings } = await loadConfigFile(
+      path.resolve(__dirname, '../rollup.config.mjs')
+    );
 
-    // Run rollup
-    await execAsync('rollup --config rollup.config.mjs');
-    console.log('✅ Rollup build completed');
+    warnings.count > 0 && warnings.flush();
 
-    // Convert icons
-    await execAsync('node ./scripts/convert-icons.js');
-    console.log('✅ Icons converted');
+    for (const inputOptions of options) {
+      const bundle = await rollup(inputOptions);
+      await Promise.all(inputOptions.output.map(bundle.write));
+      await bundle.close();
+    }
 
-    // Build manifest
-    await execAsync('node ./scripts/build-manifest.js');
-    console.log('✅ Manifest generated');
+    // Copy React dependencies
+    const isDev = process.env.NODE_ENV === 'development';
+    const reactMode = isDev ? 'development' : 'production.min';
     
-    console.log('🎉 Build completed successfully!');
+    await fs.copy(
+      `node_modules/react/umd/react.${reactMode}.js`,
+      'dist/newtab/react.js'
+    );
+    
+    await fs.copy(
+      `node_modules/react-dom/umd/react-dom.${reactMode}.js`,
+      'dist/newtab/react-dom.js'
+    );
   } catch (error) {
-    console.error('❌ Build failed:', error);
-    process.exit(1);
+    console.error('Build failed:', error);
+    throw error;
   }
-}
 
-build();
+  console.log('Copying additional files...');
+
+  console.log('Generating manifest.json...');
+  await generateManifest();
+}

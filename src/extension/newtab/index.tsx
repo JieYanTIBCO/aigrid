@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
-const App = () => {
+const App: React.FC = () => {
     return (
         <div>
             <h1>AIGrid - Live Reload</h1>
@@ -12,5 +12,11 @@ const App = () => {
     );
 };
 
-const root = createRoot(document.getElementById('root')!);
+const rootElement = document.getElementById('root');
+if (!rootElement) throw new Error('Root element not found');
+
+const root = createRoot(rootElement);
 root.render(<App />);
+
+// For debug
+console.log('React version:', React.version);

@@ -46,22 +46,36 @@ const manifestContent = `{
   }
 }`;
 
-const projectRoot = path.resolve(__dirname, '..');
-const manifestPath = path.join(projectRoot, 'dist', 'manifest.json');
+export async function generateManifest() {
+  const projectRoot = path.resolve(__dirname, '..');
+  const manifestPath = path.join(projectRoot, 'dist', 'manifest.json');
 
-// Write with explicit encoding and line endings
-fs.writeFileSync(manifestPath, manifestContent, { encoding: 'utf8', flag: 'w' });
+  // Ensure dist directory exists
+  await fs.promises.mkdir(path.dirname(manifestPath), { recursive: true });
 
-// Verify content
-const written = fs.readFileSync(manifestPath, 'utf8');
-console.log('Written manifest content:');
-console.log(written);
+  // Write with explicit encoding and line endings
+  await fs.promises.writeFile(manifestPath, manifestContent, { encoding: 'utf8' });
 
-// Verify JSON validity
-try {
+  // Verify content
+  const written = await fs.promises.readFile(manifestPath, 'utf8');
+  console.log('Manifest content:');
+  console.log(written);
+
+  // Verify JSON validity
+  try {
     JSON.parse(written);
     console.log('\n✅ Manifest is valid JSON');
-} catch (error) {
+    return true;
+  } catch (error) {
     console.error('❌ Invalid JSON:', error);
+    throw error;
+  }
+}
+
+// Allow direct execution
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
+  generateManifest().catch((error) => {
+    console.error('Failed to generate manifest:', error);
     process.exit(1);
+  });
 }
