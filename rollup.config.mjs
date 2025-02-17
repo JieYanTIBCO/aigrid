@@ -48,15 +48,13 @@ export default defineConfig([
         jsxImportSource: 'react'
       }),
       html({
-        template: ({ files }) => {
-const isDev = process.env.NODE_ENV === 'development';
-return `
+        template: () => `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Tab${isDev ? ' (Dev)' : ''}</title>
+  <title>New Tab</title>
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
@@ -64,16 +62,14 @@ return `
   <script src="react.js"></script>
   <script src="react-dom.js"></script>
   <script src="index.js"></script>
-  ${isDev ? '<script src="live-reload.js"></script>' : ''}
 </body>
 </html>
-          `.trim();
-        }
+        `
       }),
       copy({
         targets: [
           { src: 'public/**/*', dest: 'dist/' },
-      ...(process.env.NODE_ENV === 'development' ? [{
+      ...(process.env.NODE_ENV === 'development' && !process.env.VITE_BUILD_WATCH ? [{
         src: 'src/extension/newtab/live-reload.js',
         dest: 'dist/newtab'
       }] : []),

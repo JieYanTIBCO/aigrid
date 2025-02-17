@@ -5,46 +5,21 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const manifestContent = `{
-  "manifest_version": 3,
-  "name": "AIGrid",
-  "description": "Your AI Collaboration Hub for the Intelligent Era",
-  "version": "0.1.0",
-  "chrome_url_overrides": {
-    "newtab": "newtab/index.html"
-  },
-  "background": {
-    "service_worker": "background.js",
-    "type": "module"
-  },
-  "content_scripts": [
-    {
-      "matches": ["https://chat.openai.com/*"],
-      "js": ["content.js"]
-    }
-  ],
-  "permissions": [
-    "storage",
-    "cookies",
-    "scripting",
-    "tabs"
-  ],
-  "host_permissions": [
-    "https://chat.openai.com/*"
-  ],
-  "action": {
-    "default_icon": {
-      "16": "icons/icon16.png",
-      "48": "icons/icon48.png",
-      "128": "icons/icon128.png"
-    }
-  },
-  "icons": {
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png",
-    "128": "icons/icon128.png"
-  }
-}`;
+// Load manifest template
+const templatePath = path.join(__dirname, '../src/configs/manifest/manifest.template.json');
+const templateContent = await fs.promises.readFile(templatePath, 'utf8');
+
+// Validate template content
+let manifestData;
+try {
+  manifestData = JSON.parse(templateContent);
+} catch (parseError) {
+  console.error('❌ Invalid manifest template:', parseError);
+  throw new Error('Manifest template contains invalid JSON');
+}
+
+// Apply dynamic values
+manifestData.version = process.env.npm_package_version || '0.1.0';
 
 export async function generateManifest() {
   const projectRoot = path.resolve(__dirname, '..');
@@ -54,12 +29,18 @@ export async function generateManifest() {
 // Ensure directory exists with explicit permissions
   await fs.promises.mkdir(path.dirname(manifestPath), { recursive: true, mode: 0o755 });
 
+  // Prepare final manifest content
+  const finalContent = JSON.stringify(manifestData, null, 2);
+
   // Write manifest with atomic write to prevent partial writes
   const tempPath = `${manifestPath}.tmp`;
-  await fs.promises.writeFile(tempPath, manifestContent, { 
+  await fs.promises.writeFile(tempPath, finalContent, { 
     encoding: 'utf8',
     mode: 0o644
   });
+
+  console.log('Generated manifest content:');
+  console.log(finalContent);
 
   // Atomically move temp file to final destination
   await fs.promises.rename(tempPath, manifestPath);
