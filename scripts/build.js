@@ -9,9 +9,13 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default async function build() {
   console.log('Cleaning directories...');
-  await fs.remove('dist');
+    await fs.remove('dist');
+    
+    // Ensure dist directory exists
+    await fs.ensureDir('dist');
+    await fs.ensureDir('dist/newtab');
 
-  console.log('Building TypeScript files...');
+    console.log('Building TypeScript files...');
   try {
     const { options, warnings } = await loadConfigFile(
       path.resolve(__dirname, '../rollup.config.mjs')
@@ -25,19 +29,28 @@ export default async function build() {
       await bundle.close();
     }
 
-    // Copy React dependencies
+    // Set environment variables
+    process.env.NODE_ENV = process.env.NODE_ENV || 'production';
     const isDev = process.env.NODE_ENV === 'development';
     const reactMode = isDev ? 'development' : 'production.min';
     
-    await fs.copy(
-      `node_modules/react/umd/react.${reactMode}.js`,
-      'dist/newtab/react.js'
-    );
+    console.log(`Building in ${process.env.NODE_ENV} mode...`);
     
-    await fs.copy(
-      `node_modules/react-dom/umd/react-dom.${reactMode}.js`,
-      'dist/newtab/react-dom.js'
-    );
+    try {
+      // Copy React dependencies
+      await fs.copy(
+        `node_modules/react/umd/react.${reactMode}.js`,
+        'dist/newtab/react.js'
+      );
+      
+      await fs.copy(
+        `node_modules/react-dom/umd/react-dom.${reactMode}.js`,
+        'dist/newtab/react-dom.js'
+      );
+    } catch (error) {
+      console.error('Error copying React dependencies:', error);
+      throw error;
+    }
   } catch (error) {
     console.error('Build failed:', error);
     throw error;

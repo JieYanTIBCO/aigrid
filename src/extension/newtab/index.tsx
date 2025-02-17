@@ -12,11 +12,20 @@ const App: React.FC = () => {
     );
 };
 
-const rootElement = document.getElementById('root');
-if (!rootElement) throw new Error('Root element not found');
+console.log('Mounting React app...');
+console.log('React version:', React.version);
 
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+    console.error('Root element not found');
+    throw new Error('Root element not found');
+}
+
+console.log('Root element found:', rootElement);
 const root = createRoot(rootElement);
+console.log('Created React root');
 root.render(<App />);
+console.log('Rendered React app');
 
 // For debug
 console.log('React version:', React.version);

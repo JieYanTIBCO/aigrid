@@ -51,10 +51,18 @@ export async function generateManifest() {
   const manifestPath = path.join(projectRoot, 'dist', 'manifest.json');
 
   // Ensure dist directory exists
-  await fs.promises.mkdir(path.dirname(manifestPath), { recursive: true });
+// Ensure directory exists with explicit permissions
+  await fs.promises.mkdir(path.dirname(manifestPath), { recursive: true, mode: 0o755 });
 
-  // Write with explicit encoding and line endings
-  await fs.promises.writeFile(manifestPath, manifestContent, { encoding: 'utf8' });
+  // Write manifest with atomic write to prevent partial writes
+  const tempPath = `${manifestPath}.tmp`;
+  await fs.promises.writeFile(tempPath, manifestContent, { 
+    encoding: 'utf8',
+    mode: 0o644
+  });
+
+  // Atomically move temp file to final destination
+  await fs.promises.rename(tempPath, manifestPath);
 
   // Verify content
   const written = await fs.promises.readFile(manifestPath, 'utf8');

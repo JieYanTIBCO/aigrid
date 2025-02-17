@@ -49,8 +49,8 @@ export default defineConfig([
       }),
       html({
         template: ({ files }) => {
-          const isDev = process.env.NODE_ENV === 'development';
-          return `
+const isDev = process.env.NODE_ENV === 'development';
+return `
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,10 +73,13 @@ export default defineConfig([
       copy({
         targets: [
           { src: 'public/**/*', dest: 'dist/' },
-          ...(process.env.NODE_ENV === 'development' ? [{
-            src: 'src/extension/newtab/live-reload.js',
-            dest: 'dist/newtab'
-          }] : [])
+      ...(process.env.NODE_ENV === 'development' ? [{
+        src: 'src/extension/newtab/live-reload.js',
+        dest: 'dist/newtab'
+      }] : []),
+      // Copy React dependencies
+      { src: 'node_modules/react/umd/react.production.min.js', dest: 'dist/newtab', rename: 'react.js' },
+      { src: 'node_modules/react-dom/umd/react-dom.production.min.js', dest: 'dist/newtab', rename: 'react-dom.js' }
         ]
       })
     ]
