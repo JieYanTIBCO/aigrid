@@ -99,19 +99,12 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
   };
 
   return (
-    <div 
-      className="unified-input"
-    >
+    <div className="unified-input">
       <form onSubmit={handleSubmit} className="input-form">
-        <div className="input-left">
-          <LayoutControl 
-            currentLayout={currentLayout}
-            onLayoutChange={onLayoutChange}
-          />
-          <div className="active-model">
-            To: {currentTarget}
-          </div>
-        </div>
+        <LayoutControl 
+          currentLayout={currentLayout}
+          onLayoutChange={onLayoutChange}
+        />
         <div className="input-right">
           <textarea
             ref={textareaRef}
@@ -135,3 +128,4 @@ const UnifiedInput: React.FC<UnifiedInputProps> = ({
   );
 };
 
+export default UnifiedInput;

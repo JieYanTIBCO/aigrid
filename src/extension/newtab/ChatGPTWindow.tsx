@@ -5,9 +5,12 @@ interface Message {
   content: string;
 }
 
-const ChatGPTWindow: React.FC = () => {
+interface ChatGPTWindowProps {
+  isConnected?: boolean;
+}
+
+const ChatGPTWindow: React.FC<ChatGPTWindowProps> = ({ isConnected = true }) => {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -15,40 +18,14 @@ const ChatGPTWindow: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!inputValue.trim() || isLoading) return;
-
-    const newMessage: Message = {
-      role: 'user',
-      content: inputValue.trim()
-    };
-
-    setMessages(prev => [...prev, newMessage]);
-    setInputValue('');
-    setIsLoading(true);
-    scrollToBottom();
-
-    try {
-      // TODO: Implement actual ChatGPT API call
-      // For now, just simulate a response
-      setTimeout(() => {
-        const response: Message = {
-          role: 'assistant',
-          content: `Echo: ${newMessage.content}`
-        };
-        setMessages(prev => [...prev, response]);
-        setIsLoading(false);
-        scrollToBottom();
-      }, 1000);
-    } catch (error) {
-      console.error('Failed to get response:', error);
-      setIsLoading(false);
-    }
-  };
-
   return (
     <div className="chatgpt-window">
+      <div className="window-header">
+        <div className="connection-status">
+          <span className={`status-dot ${isConnected ? 'connected' : ''}`} />
+          {isConnected ? 'Connected' : 'Disconnected'}
+        </div>
+      </div>
       <div className="chat-messages">
         {messages.map((message, index) => (
           <div
@@ -65,23 +42,6 @@ const ChatGPTWindow: React.FC = () => {
         )}
         <div ref={messagesEndRef} />
       </div>
-      <form onSubmit={handleSubmit} className="chat-input-form">
-        <input
-          type="text"
-          value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
-          placeholder="Type a message..."
-          disabled={isLoading}
-          className="chat-input"
-        />
-        <button
-          type="submit"
-          disabled={isLoading || !inputValue.trim()}
-          className="chat-submit"
-        >
-          Send
-        </button>
-      </form>
     </div>
   );
 };

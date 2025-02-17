@@ -18,7 +18,7 @@ const LayoutControl: React.FC<LayoutControlProps> = ({
         title="Three Column Layout"
       >
         <svg width="24" height="24" viewBox="0 0 24 24">
-          <path d="M3 3h6v18H3V3zm6 0h6v18H9V3zm6 0h6v18h-6V3z" fill="currentColor"/>
+          <path d="M3 3h5v18H3V3zm7 0h5v18h-5V3zm7 0h4v18h-4V3z" fill="currentColor"/>
         </svg>
       </button>
       <button
@@ -27,7 +27,7 @@ const LayoutControl: React.FC<LayoutControlProps> = ({
         title="Two Column Layout"
       >
         <svg width="24" height="24" viewBox="0 0 24 24">
-          <path d="M3 3h9v18H3V3zm9 0h9v18h-9V3z" fill="currentColor"/>
+          <path d="M3 3h9v18H3V3zm11 0h7v18h-7V3z" fill="currentColor"/>
         </svg>
       </button>
       <button

@@ -62,10 +62,10 @@ graph TD
    - Layout persistence
 
 4. Model Windows
+   - Title bar with integrated status indicator (small dot: green=connected, red=disconnected, yellow=connecting)
+   - Status indicator tooltip on hover showing detailed connection state
    - Output-only displays
    - Synchronized scroll state
-   - Visual activity indicators
-   - Service status badges
 
 ### 2.4 Grid Window Architecture (Updated)
 
@@ -111,6 +111,12 @@ graph TD
    - Overflow behavior: Scroll
    - Position: Fixed bottom
    - Z-index: Highest
+   - Border: 1px solid #E5E7EB
+   - Border radius: 8px top edges
+   - Background: White
+   - Box shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1)
+   - Padding: 12px 16px
+   - Margin: 0 16px 16px 16px
 
 3. Grid Layouts
    - 1/2 split: 50% each
