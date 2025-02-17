@@ -29,15 +29,9 @@ export default defineConfig([
       dir: 'dist/newtab',
       format: 'iife',
       sourcemap: true,
-      globals: {
-        'react': 'React',
-        'react-dom/client': 'ReactDOM',
-        'react-dom': 'ReactDOM'
-      },
       name: 'AIGrid',
       entryFileNames: 'index.js',
-      assetFileNames: '[name][extname]',
-      inlineDynamicImports: true
+      assetFileNames: '[name][extname]'
     },
     plugins: [
       replace({
@@ -62,9 +56,39 @@ export default defineConfig([
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>New Tab</title>
   <link rel="stylesheet" href="index.css">
+  <style>
+    #debug {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background: #f0f0f0;
+      border-top: 1px solid #ccc;
+      font-family: monospace;
+      white-space: pre-wrap;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div id="root"></div>
+  <div id="debug"></div>
+  <script>
+    window.onerror = function(msg, url, line, col, error) {
+      const debug = document.getElementById('debug');
+      debug.style.display = 'block';
+      debug.textContent = \`Error: \${msg}
+At: \${url}:\${line}:\${col}
+Stack: \${error && error.stack}\`;
+      return false;
+    };
+    console.error = function() {
+      const debug = document.getElementById('debug');
+      debug.style.display = 'block';
+      debug.textContent += '\\nError: ' + Array.from(arguments).join(' ');
+    };
+  </script>
   <script src="index.js"></script>
 </body>
 </html>
