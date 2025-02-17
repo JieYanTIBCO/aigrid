@@ -1,3 +1,12 @@
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Layout selector styles */
 .layout-selector {
   position: fixed;
   top: 10px;
@@ -8,6 +17,8 @@
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 8px;
 }
 
 .layout-btn {
@@ -18,6 +29,7 @@
   background: white;
   cursor: pointer;
   transition: all 0.2s;
+  font-size: 14px;
 }
 
 .layout-btn:hover {
@@ -25,86 +37,92 @@
 }
 
 .layout-btn.active {
-  background: #e0e0e0;
-  border-color: #999;
+  background: #2563eb;
+  color: white;
+  border-color: #2563eb;
 }
 
+/* Grid container styles */
 .grid-container {
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  padding-top: 60px; /* Space for layout selector */
+  box-sizing: border-box;
+  display: flex;
+  gap: 10px;
+  padding: 10px;
 }
 
+/* Layout specific styles */
+.layout-vertical-1-3 {
+  flex-direction: row;
+}
+
+.layout-vertical-1-3 .grid-window {
+  flex: 1;
+  max-width: calc(33.33% - 10px);
+}
+
+.layout-vertical-1-2 {
+  flex-direction: row;
+}
+
+.layout-vertical-1-2 .grid-window {
+  flex: 1;
+  max-width: calc(50% - 10px);
+}
+
+.layout-grid-2x2 {
+  flex-wrap: wrap;
+}
+
+.layout-grid-2x2 .grid-window {
+  flex: 1 1 calc(50% - 10px);
+  min-width: calc(50% - 10px);
+  max-width: calc(50% - 10px);
+  height: calc(50vh - 40px);
+}
+
+/* Window styles */
 .grid-window {
   background: white;
-  border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.grid-window.minimized {
+  transform: scale(0.8);
+}
+
+.grid-window.inactive {
+  opacity: 0.8;
 }
 
 .grid-window-header {
-  padding: 8px;
-  background: #f5f5f5;
-  border-bottom: 1px solid #ddd;
-  border-radius: 8px 8px 0 0;
+  padding: 12px;
+  background: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: move;
 }
 
 .grid-window-title {
   font-weight: 500;
-  color: #333;
-}
-
-.grid-window-controls button {
-  padding: 4px 8px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.grid-window-controls button:hover {
-  background: #e0e0e0;
+  color: #1a1a1a;
+  text-transform: capitalize;
 }
 
 .grid-window-content {
   flex: 1;
-  overflow: auto;
-  padding: 16px;
+  overflow: hidden;
+  position: relative;
 }
 
-.grid-window-resize {
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  width: 16px;
-  height: 16px;
-  cursor: se-resize;
-  background: #f5f5f5;
-  border-radius: 0 0 8px 0;
-}
-
-/* Layout-specific styles */
-.layout-vertical-1-3 .grid-window {
-  width: calc(33.33% - 20px);
-  height: calc(100% - 20px);
-  margin: 10px;
-}
-
-.layout-vertical-1-2 .grid-window {
-  width: calc(50% - 20px);
-  height: calc(100% - 20px);
-  margin: 10px;
-}
-
-.layout-grid-2x2 .grid-window {
-  width: calc(50% - 20px);
-  height: calc(50% - 20px);
-  margin: 10px;
-}
+/* Import ChatGPT window styles */
+@import './ChatGPTWindow.css';

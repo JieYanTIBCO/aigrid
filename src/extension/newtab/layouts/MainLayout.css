@@ -1,0 +1,92 @@
+.main-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.windows-container {
+  flex: 1;
+  margin-left: var(--side-panel-width, 250px);
+  margin-bottom: 100px; /* Space for unified input */
+  position: relative;
+  transition: margin-left 0.3s ease;
+}
+
+/* Side panel collapsed state */
+.main-layout[data-panel-collapsed="true"] .windows-container {
+  margin-left: 40px;
+}
+
+/* CSS Variables */
+:root {
+  --side-panel-width: 250px;
+  --unified-input-height: 100px;
+  --header-height: 60px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    --side-panel-width: 40px;
+  }
+
+  .windows-container {
+    margin-left: 40px;
+  }
+}
+
+/* Window animations */
+.grid-window {
+  transition: transform 0.3s ease, opacity 0.2s ease;
+}
+
+.grid-window.minimized {
+  transform: scale(0.8) translateY(20px);
+  opacity: 0.8;
+}
+
+.grid-window.active {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Layout transition animations */
+.windows-container {
+  transition: all 0.3s ease;
+}
+
+.windows-container > * {
+  transition: all 0.3s ease;
+}
+
+/* Chat windows specific styles */
+.chat-window-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-window-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Loading states */
+.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(2px);
+}

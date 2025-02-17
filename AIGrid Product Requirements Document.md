@@ -34,84 +34,96 @@ graph TD
 | Custom Service | 2.0 | OpenAPI Spec | Dynamic Loading |
 | Claude | Enterprise | OAuth 2.0 | Team Access Control |
 
-### 2.3 Enhanced Feature Stack
+### 2.3 Enhanced Feature Stack (Updated)
 
-```typescript
-interface FeatureMatrix {
-  core: {
-    gridView: {
-      name: 'Grid Window Management',
-      capabilities: [
-        'Multi-AI Service Layout',
-        'Drag-and-Drop Window Arrangement',
-        'Session Persistence',
-        'Window State Synchronization'
-      ],
-      layout: {
-        types: ['grid', 'horizontal', 'vertical', 'custom'],
-        maxWindows: 4,
-        resizable: true,
-        persistent: true
-      }
-    },
-    windowManagement: {
-      features: [
-        'Window State Management',
-        'Layout Presets',
-        'Cross-Window Communication',
-        'Shared Context'
-      ]
-    },
-    sessionHandling: [
-      'Concurrent AI Sessions',
-      'Context Sharing',
-      'History Navigation'
-    ]
-  },
-  enterprise: [
-    'Collaborative Grid Layouts',
-    'Team Layout Templates',
-    'Audit Log Tracking',
-    'Private Deployment'
-  ],
-  performance: [
-    'WebGL Canvas Rendering',
-    'Virtualized Windows',
-    'Lazy Load Optimization',
-    'Memory Management'
-  ]
-}
-```
+#### 2.3.1 Layout Components
 
-### 2.4 Grid Window Architecture
+1. Adjustable Side Panel
+   - Collapsible control panel
+   - Quick settings access
+   - Model fullscreen shortcuts
+   - Session management
+   - Width range: 240px - 320px
+
+2. Unified Input Interface
+   - Fixed bottom position
+   - Multi-line support (1-5 lines)
+   - Auto-scroll for overflow
+   - Visible last 5 lines
+   - Character count & model status
+
+3. Layout Control
+   - Quick layout switching icons
+   - Supported layouts:
+     - 1/2 split (vertical)
+     - 1/3 split (vertical)
+     - 2x2 grid
+   - Visual layout preview
+   - Layout persistence
+
+4. Model Windows
+   - Output-only displays
+   - Synchronized scroll state
+   - Visual activity indicators
+   - Service status badges
+
+### 2.4 Grid Window Architecture (Updated)
 
 ```mermaid
 graph TD
-    subgraph ChromeTab[New Tab Integration]
-        GW[Grid Window Manager]
+    subgraph Interface[Interface Components]
+        SP[Side Panel]
+        GC[Grid Container]
+        UI[Unified Input]
+    end
+    
+    subgraph Controls[Layout Controls]
         LC[Layout Controller]
-        SC[Session Controller]
+        LS[Layout Selector]
+        PS[Panel State]
     end
     
     subgraph Windows[Window Management]
-        W1[Window 1/ChatGPT]
-        W2[Window 2/Claude]
-        W3[Window 3/Custom AI]
-        WS[Window Sync]
+        W1[Window 1/Output]
+        W2[Window 2/Output]
+        W3[Window 3/Output]
+        W4[Window 4/Output]
     end
     
-    subgraph State[State Management]
-        LS[Layout State]
-        PS[Persistence]
-        SS[Session State]
-    end
-    
-    GW --> LC
-    LC --> Windows
-    SC --> Windows
-    Windows --> WS
-    WS --> State
+    SP --> PS
+    LS --> LC
+    LC --> GC
+    GC --> Windows
+    UI --> Windows
 ```
+
+#### 2.4.1 Layout Specifications
+
+1. Side Panel
+   - Default width: 280px
+   - Collapse trigger: 16px wide
+   - Transition: 200ms ease-in-out
+   - Z-index: Above grid windows
+
+2. Input Area
+   - Height: Dynamic (24px - 120px)
+   - Max lines: 5
+   - Overflow behavior: Scroll
+   - Position: Fixed bottom
+   - Z-index: Highest
+
+3. Grid Layouts
+   - 1/2 split: 50% each
+   - 1/3 split: 33.33% each
+   - 2x2: 50% width, 50% height
+   - Gutters: 8px
+   - Minimum window size: 320px
+
+4. Responsive Behavior
+   - Breakpoints: 1024px, 1440px, 1920px
+   - Column collapse: < 768px
+   - Side panel auto-collapse: < 1024px
+   - Layout restrictions on smaller screens
 
 ### 2.5 Window Interaction Model
 

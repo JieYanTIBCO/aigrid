@@ -6,10 +6,11 @@
   "scripts": {
     "clean": "rimraf dist",
     "prebuild": "node ./scripts/validate-entrypoints.js",
-    "build": "cross-env NODE_ENV=production node scripts/build-complete.js",
-    "build:dev": "cross-env NODE_ENV=development node scripts/build-complete.js",
+    "build": "cross-env NODE_ENV=production node scripts/build-complete.js && node scripts/copy-assets.js",
+    "build:dev": "cross-env NODE_ENV=development node scripts/build-complete.js && node scripts/copy-assets.js",
     "dev": "cross-env NODE_ENV=development node scripts/watch.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "copy-assets": "node scripts/copy-assets.js"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^25.0.0",
