@@ -27,12 +27,12 @@ async function setupWatch() {
     // Copy React dependencies
     console.log('Copying React dependencies...');
     await fs.copy(
-        path.join(projectRoot, 'node_modules/react/umd/react.production.min.js'),
-        path.join(distDir, 'newtab/react.production.min.js')
+        path.join(projectRoot, 'node_modules/react/umd/react.development.js'),
+        path.join(distDir, 'newtab/react.js')
     );
     await fs.copy(
-        path.join(projectRoot, 'node_modules/react-dom/umd/react-dom.production.min.js'),
-        path.join(distDir, 'newtab/react-dom.production.min.js')
+        path.join(projectRoot, 'node_modules/react-dom/umd/react-dom.development.js'),
+        path.join(distDir, 'newtab/react-dom.js')
     );
 
     // Copy public assets

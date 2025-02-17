@@ -7,6 +7,7 @@
     "clean": "rimraf dist",
     "prebuild": "node ./scripts/validate-entrypoints.js",
     "build": "cross-env NODE_ENV=production node scripts/build-complete.js",
+    "build:dev": "cross-env NODE_ENV=development node scripts/build-complete.js",
     "dev": "cross-env NODE_ENV=development node scripts/watch.js",
     "preview": "vite preview"
   },
