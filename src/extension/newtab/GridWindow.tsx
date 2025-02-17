@@ -1,4 +1,6 @@
 import React from 'react';
+import ChatGPTWindow from './ChatGPTWindow';
+import './ChatGPTWindow.css';
 
 interface WindowConfig {
   id: string;
@@ -42,8 +44,8 @@ const GridWindow: React.FC<GridWindowProps> = ({
 
     const handleMouseMove = (e: MouseEvent) => {
       onMove(id, {
-        x: e.clientX - startPosition.x,
-        y: e.clientY - startPosition.y,
+        x: Math.max(0, e.clientX - startPosition.x),
+        y: Math.max(0, e.clientY - startPosition.y),
       });
     };
 
@@ -55,6 +57,19 @@ const GridWindow: React.FC<GridWindowProps> = ({
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
   }, [id, position, onMove]);
+
+  const renderContent = () => {
+    switch (service) {
+      case 'chatgpt':
+        return <ChatGPTWindow />;
+      case 'claude':
+        return <div>Claude Window (Coming Soon)</div>;
+      case 'custom':
+        return <div>Custom AI Window</div>;
+      default:
+        return <div>Unknown Service</div>;
+    }
+  };
 
   return (
     <div
@@ -89,10 +104,7 @@ const GridWindow: React.FC<GridWindowProps> = ({
         </div>
       </div>
       <div className="grid-window-content">
-        {/* Service-specific content will be rendered here */}
-        {service === 'chatgpt' && <div>ChatGPT Window</div>}
-        {service === 'claude' && <div>Claude Window</div>}
-        {service === 'custom' && <div>Custom AI Window</div>}
+        {renderContent()}
       </div>
       <div 
         className="grid-window-resize"
@@ -110,7 +122,7 @@ const GridWindow: React.FC<GridWindowProps> = ({
           const handleMouseMove = (e: MouseEvent) => {
             onResize(id, {
               ...position,
-              width: Math.max(200, startSize.width + (e.clientX - startPos.x)),
+              width: Math.max(300, startSize.width + (e.clientX - startPos.x)),
               height: Math.max(200, startSize.height + (e.clientY - startPos.y)),
             });
           };

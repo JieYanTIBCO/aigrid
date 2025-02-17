@@ -1,26 +1,110 @@
-body {
-    margin: 0;
-    padding: 20px;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-        Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #f5f5f5;
+.layout-selector {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-    color: #2c3e50;
-    margin-bottom: 1rem;
+.layout-btn {
+  margin: 0 5px;
+  padding: 8px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-p {
-    color: #34495e;
-    font-size: 1.1rem;
+.layout-btn:hover {
+  background: #f0f0f0;
 }
 
-div {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.layout-btn.active {
+  background: #e0e0e0;
+  border-color: #999;
+}
+
+.grid-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.grid-window {
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+.grid-window-header {
+  padding: 8px;
+  background: #f5f5f5;
+  border-bottom: 1px solid #ddd;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: move;
+}
+
+.grid-window-title {
+  font-weight: 500;
+  color: #333;
+}
+
+.grid-window-controls button {
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.grid-window-controls button:hover {
+  background: #e0e0e0;
+}
+
+.grid-window-content {
+  flex: 1;
+  overflow: auto;
+  padding: 16px;
+}
+
+.grid-window-resize {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 16px;
+  height: 16px;
+  cursor: se-resize;
+  background: #f5f5f5;
+  border-radius: 0 0 8px 0;
+}
+
+/* Layout-specific styles */
+.layout-vertical-1-3 .grid-window {
+  width: calc(33.33% - 20px);
+  height: calc(100% - 20px);
+  margin: 10px;
+}
+
+.layout-vertical-1-2 .grid-window {
+  width: calc(50% - 20px);
+  height: calc(100% - 20px);
+  margin: 10px;
+}
+
+.layout-grid-2x2 .grid-window {
+  width: calc(50% - 20px);
+  height: calc(50% - 20px);
+  margin: 10px;
 }
